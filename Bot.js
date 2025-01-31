@@ -7,6 +7,7 @@ function Chatbot() {
     { text: 'Hello! How can I help you today?', sender: 'bot' },
   ]);
   const [input, setInput] = useState('');
+  const [selectedConversation, setSelectedConversation] = useState(null);
 
   const handleSendMessage = async () => {
     if (input.trim() === '') return;
@@ -43,27 +44,47 @@ function Chatbot() {
     }
   };
 
+  const handleSelectConversation = (index) => {
+    setSelectedConversation(index);
+  };
+
   return (
     <div className="chatbot-container">
-      <div className="chatbot-header">
-        <h2>Chatbot</h2>
+      {/* Left Column for Interaction Logs */}
+      <div className="interaction-logs">
+        <h3>Interaction Logs</h3>
+        <div className="logs-list">
+          {messages.map((message, index) => (
+            <div
+              key={index}
+              className={`log-item ${selectedConversation === index ? 'selected' : ''}`}
+              onClick={() => handleSelectConversation(index)}
+            >
+              {message.text.slice(0, 50)}...
+            </div>
+          ))}
+        </div>
       </div>
-      <div className="messages-container">
-        {messages.map((message, index) => (
-          <div key={index} className={`message ${message.sender}`}>
-            {message.text}
-          </div>
-        ))}
-      </div>
-      <div className="input-container">
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Type a message..."
-          rows={3}  // Set number of visible rows
-        />
-        <button onClick={handleSendMessage}>Send</button>
+
+      {/* Right Column for Chat */}
+      <div className="chat-container">
+        <div className="messages-container">
+          {messages.map((message, index) => (
+            <div key={index} className={`message ${message.sender}`}>
+              {message.text}
+            </div>
+          ))}
+        </div>
+        <div className="input-container">
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Type a message..."
+            rows={3}  // Set number of visible rows
+          />
+          <button onClick={handleSendMessage}>Send</button>
+        </div>
       </div>
     </div>
   );
